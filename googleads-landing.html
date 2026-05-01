@@ -1066,11 +1066,11 @@
 
 
 <script>
-  // ── FORMSPREE ENDPOINT ──────────────────────────────────────────────────────
-  // 1. Go to https://formspree.io  →  Sign up with felipedelads@gmail.com
-  // 2. Click "+ New Form", name it "Google Ads Landing"
-  // 3. Copy your Form ID (looks like: xabc1234) and paste it below
-  const FORMSPREE_ID = 'YOUR_FORM_ID'; // ← replace this
+  // ── WEB3FORMS ENDPOINT ──────────────────────────────────────────────────────
+  // 1. Go to https://web3forms.com
+  // 2. Enter felipedelads@gmail.com → click "Get your Access Key"
+  // 3. Check your inbox and paste the key below
+  const WEB3FORMS_KEY = 'YOUR_ACCESS_KEY'; // ← replace this
   // ────────────────────────────────────────────────────────────────────────────
 
   async function submitForm() {
@@ -1094,21 +1094,24 @@
     btn.textContent = 'Sending…';
 
     try {
-      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: `New lead from landing page — ${name}`,
+          from_name: 'Google Ads Landing Page',
           name,
           email,
           website,
           monthly_ad_budget: budget,
-          main_goal: goal,
-          _replyto: email,
-          _subject: `New lead from landing page — ${name}`
+          main_goal: goal
         })
       });
 
-      if (res.ok) {
+      const data = await res.json();
+
+      if (data.success) {
         // Fire Google Ads lead conversion
         // Replace AW-XXXXXXXXXX/XXXXXXXXXXXXXXXXXX with your real Conversion Label
         if (typeof gtag === 'function') {
